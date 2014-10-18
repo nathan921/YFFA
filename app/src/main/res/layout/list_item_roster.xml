@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:layout_width="match_parent"
+              android:layout_height="wrap_content">
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/test_position"
+        android:id="@+id/playerPosition"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentLeft="true"
+        android:layout_margin="16dp"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/test_number"
+        android:id="@+id/playerNumber"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentLeft="true"
+        android:layout_margin="16dp"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/test_name"
+        android:id="@+id/playerName"
+        android:layout_alignParentTop="true"
+        android:layout_toRightOf="@+id/playerPosition"
+        android:layout_margin="16dp"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/test_team_score"
+        android:id="@+id/teamScore"
+        android:layout_alignParentBottom="true"
+        android:layout_alignLeft="@id/playerName"
+        android:layout_toRightOf="@+id/playerNumber"
+        android:layout_marginTop="16dp"
+        android:layout_marginBottom="16dp"
+        android:layout_marginRight="16dp"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/test_team"
+        android:id="@+id/playerTeam"
+        android:layout_alignParentTop="true"
+        android:layout_toRightOf="@+id/playerName"
+        android:layout_margin="16dp"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/test_average"
+        android:id="@+id/playerProjection"
+        android:layout_alignParentBottom="true"
+        android:layout_toRightOf="@+id/teamScore"
+        android:layout_alignLeft="@id/playerTeam"
+        android:layout_marginTop="16dp"
+        android:layout_marginBottom="16dp"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/slash_holder"
+        android:text="/"
+        android:layout_toRightOf="@id/playerProjection"
+        android:layout_alignTop="@id/playerProjection"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/test_projection"
+        android:id="@+id/playerAverage"
+        android:layout_alignTop="@+id/playerProjection"
+        android:layout_toRightOf="@id/slash_holder"
+        android:layout_marginRight="16dp"
+        android:layout_marginBottom="16dp"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/playerScore"
+        android:text="@string/test_points"
+        android:layout_alignParentRight="true"
+        android:layout_margin="16dp"
+        android:layout_centerInParent="true" />
+</RelativeLayout>

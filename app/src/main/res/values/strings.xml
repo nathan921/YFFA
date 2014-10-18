@@ -1,0 +1,18 @@
+<resources>
+    <string name="app_name">YFFA</string>
+    <string name="intro_text">This app requires you to acknowledge that you want to allow it to access your fantasy football information. \n \nWhen the Yahoo! screen is displayed, please log in and hit accept.</string>
+    <string name="accept">Accept</string>
+    <string name="roster">Roster</string>
+    <string name="scoring">Scoring</string>
+    <string name="matchups">Match Ups</string>
+    <string name="my_matchup">My Match Up</string>
+
+    <string name="test_position">QB</string>
+    <string name="test_number">#12</string>
+    <string name="test_name">Matthew Stafford</string>
+    <string name="test_team">Detroit Lions</string>
+    <string name="test_team_score">33-27</string>
+    <string name="test_projection">22.05</string>
+    <string name="test_average">23.45</string>
+    <string name="test_points">35.23</string>
+</resources>
