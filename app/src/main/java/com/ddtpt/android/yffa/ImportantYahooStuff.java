@@ -126,23 +126,25 @@ public class ImportantYahooStuff {
         leagueKey = mPrefs.getString(LEAGUE_KEY, "");
         gameKey = mPrefs.getString(GAME_KEY, "");
 
+        try {
+            mService = new ServiceBuilder()
+                    .provider(YahooApi.class)
+                    .apiKey(CONSUMER_KEY)
+                    .apiSecret(CONSUMER_SECRET)
+                    .callback("yffa://www.ddtpt.com")
+                    .build();
+
+
+        } catch (Exception e) {
+            Log.e("SERVICE SETUP", e.toString());
+        }
+
         if (!accessToken.equals("") && !accessSecret.equals("") && !session.equals("")) {
             tokenFlag = true;
             mSession = session;
             mAccessToken = new Token(accessToken, accessSecret);
 
-            try {
-                mService = new ServiceBuilder()
-                        .provider(YahooApi.class)
-                        .apiKey(CONSUMER_KEY)
-                        .apiSecret(CONSUMER_SECRET)
-                        .callback("yffa://www.ddtpt.com")
-                        .build();
 
-
-            } catch (Exception e) {
-                Log.e("SERVICE SETUP", e.toString());
-            }
         } else {
             new getRequestToken().execute();
         }
@@ -154,11 +156,13 @@ public class ImportantYahooStuff {
             mTeamKey = teamKey;
 
         } else {
-            new getUserSpecificInformation().execute();
+            if (mAccessToken != null) {
+                new getUserSpecificInformation().execute();
+            }
         }
 
         if (tokenFlag && userDataFlag) {
-            new testAccessKey().execute();
+            new refreshAccessToken().execute();
         }
 
     }
@@ -169,9 +173,10 @@ public class ImportantYahooStuff {
             mRequestToken = mService.getRequestToken();
             String url = mService.getAuthorizationUrl(mRequestToken);
             Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(url))
-                    .setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP | Intent.FLAG_ACTIVITY_NO_HISTORY | Intent.FLAG_FROM_BACKGROUND);
+                    .setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP | Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_FROM_BACKGROUND);
+            Log.i("BALLS", "INTENT STARTING");
             mContext.startActivity(intent);
-
+            Log.i("BALLS", "INTENT FINISHED");
             return null;
         }
 
@@ -206,6 +211,10 @@ public class ImportantYahooStuff {
 
             }
             return null;
+        }
+        @Override
+        protected void onPostExecute(Void result) {
+            new getUserSpecificInformation().execute();
         }
 
     }

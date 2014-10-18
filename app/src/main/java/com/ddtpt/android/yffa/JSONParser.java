@@ -189,7 +189,31 @@ public class JSONParser {
 
     public ArrayList<MatchupObject> parseMatchupData(String json) {
         ArrayList<MatchupObject> matchups = new ArrayList<MatchupObject>();
+        final ObjectMapper mapper = new ObjectMapper();
+        String hTeam, hOwner, hIcon, aTeam, aOwner, aIcon;
+        Double hScore, aScore;
+        try {
+            JsonNode root = mapper.readTree(json);
+            JsonNode matches = root.findPath("matchups");
+            Iterator<JsonNode> iterator = matches.elements();
+            while (iterator.hasNext()) {
+                matches = iterator.next().findPath("teams");
+                if (!matches.isMissingNode()) {
+                    hTeam = matches.get("0").findPath("name").asText();
+                    aTeam = matches.get("1").findPath("name").asText();
+                    hOwner = matches.get("0").findPath("nickname").asText();
+                    aOwner = matches.get("1").findPath("nickname").asText();
+                    hIcon = matches.get("0").findPath("team_logos").findPath("url").asText();
+                    aIcon = matches.get("1").findPath("team_logos").findPath("url").asText();
+                    hScore = matches.get("0").findPath("team_points").get("total").asDouble();
+                    aScore = matches.get("1").findPath("team_points").get("total").asDouble();
+                    matchups.add(new MatchupObject(hTeam, hOwner, hIcon, hScore, aTeam, aOwner, aIcon, aScore));
+                }
 
+            }
+        } catch (Exception e)  {
+            Log.e("JSONPARSE", e.toString());
+        }
         return matchups;
     }
 }

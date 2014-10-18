@@ -7,7 +7,7 @@ public class MatchupObject {
     private String mHomeTeam, mHomeOwner, mHomeIcon, mAwayTeam, mAwayOwner, mAwayIcon;
     private Double mHomeScore, mAwayScore;
 
-    public MatchupObject(String hTeam, String hOwner, String hIcon, String aTeam, String aOwner, String aIcon, Double hScore, Double aScore) {
+    public MatchupObject(String hTeam, String hOwner, String hIcon, Double hScore, String aTeam,  String aOwner, String aIcon, Double aScore) {
         mHomeTeam = hTeam;
         mAwayTeam = aTeam;
         mHomeOwner = hOwner;

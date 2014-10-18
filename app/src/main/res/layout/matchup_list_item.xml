@@ -1,16 +1,27 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              android:layout_margin="16dp"
+              android:layout_margin="8dp"
               android:layout_width="match_parent"
               android:layout_height="wrap_content">
-
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/home_team_icon"
+        android:layout_alignParentLeft="true"
+        android:layout_alignTop="@+id/home_team_name"
+        android:layout_alignBottom="@+id/home_team_score"
+        android:scaleType="fitCenter"
+        android:adjustViewBounds="true"
+        android:maxWidth="38dp"
+        android:src="@drawable/throwboy"
+        />
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/home_team_name"
+        android:layout_toRightOf="@id/home_team_icon"
         android:layout_alignParentTop="true"
-        android:layout_alignParentLeft="true"
         android:textSize="16sp"
         android:text="Multiple Scorgasms"
         />
@@ -43,7 +54,7 @@
         android:layout_height="wrap_content"
         android:id="@+id/away_team_name"
         android:layout_alignParentTop="true"
-        android:layout_alignParentRight="true"
+        android:layout_toLeftOf="@+id/away_team_icon"
         android:textSize="16sp"
         android:text="The Golden Taints"
         />
@@ -62,5 +73,18 @@
         android:layout_below="@id/away_team_owner"
         android:layout_alignRight="@id/away_team_owner"
         android:text="102.54"
+        />
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/away_team_icon"
+        android:layout_alignParentRight="true"
+        android:layout_alignTop="@id/away_team_name"
+        android:layout_alignBottom="@id/away_team_score"
+        android:scaleType="fitCenter"
+        android:adjustViewBounds="true"
+        android:maxWidth="38dp"
+        android:src="@drawable/throwboy"
+
         />
 </RelativeLayout>

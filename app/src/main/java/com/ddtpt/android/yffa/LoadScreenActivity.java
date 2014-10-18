@@ -5,7 +5,7 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
-
+import android.util.Log;
 
 
 /**
@@ -34,8 +34,11 @@ public class LoadScreenActivity extends Activity implements ImportantYahooStuff.
     @Override
     public void onNewIntent(Intent intent) {
         super.onNewIntent(intent);
+        Log.i("BALLS", "onNewIntent Start");
         final Uri uri = intent.getData();
+        Log.i("BALLS", "getting uri from intent");
         if (uri != null && uri.getScheme().equals("yffa")) {
+            Log.i("BALLS", "calling get access token with uri");
             mYahooStuff.new getAccessToken().execute(uri);
         }
     }
