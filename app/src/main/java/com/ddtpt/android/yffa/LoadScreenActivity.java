@@ -49,9 +49,14 @@ public class LoadScreenActivity extends Activity implements ImportantYahooStuff.
                 mTask = mYahooStuff.new refreshAccessToken().execute();
             }
         } else if (result == true) {
-            Intent intent = new Intent(this, MainPagerActivity.class);
-            startActivity(intent);
-            //mYahooStuff.new fetchStats().execute();
+            if (getResources().getBoolean(R.bool.has_two_panes)) {
+                Intent intent = new Intent(this, ScoreBoardActivity.class);
+                startActivity(intent);
+            } else {
+                Intent intent = new Intent(this, MainPagerActivity.class);
+                startActivity(intent);
+                //mYahooStuff.new fetchStats().execute();
+            }
         }
     }
 
