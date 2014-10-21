@@ -21,13 +21,9 @@ import java.util.ArrayList;
  */
 public class ScoreBoardFragment extends ListFragment implements ImportantYahooStuff.matchupRetrievalCompleteListener {
     ImportantYahooStuff mYahooStuff;
-    private Callbacks mCallbacks;
     ArrayList<MatchupObject> mMatchups;
     MatchupListAdapter adapter;
 
-    public interface Callbacks {
-        void onMatchupSelected(MatchupObject matchup);
-    }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -43,21 +39,9 @@ public class ScoreBoardFragment extends ListFragment implements ImportantYahooSt
     }
 
     @Override
-    public void onAttach(Activity activity) {
-        super.onAttach(activity);
-        mCallbacks = (Callbacks)activity;
-    }
-
-    @Override
-    public void onDetach() {
-        super.onDetach();
-        mCallbacks = null;
-    }
-
-    @Override
     public void onListItemClick(ListView l, View v, int position, long id) {
         MatchupObject matchup = ((MatchupListAdapter)getListAdapter()).getItem(position);
-        mCallbacks.onMatchupSelected(matchup);
+        //mCallbacks.onMatchupSelected(matchup);
 
     }
 

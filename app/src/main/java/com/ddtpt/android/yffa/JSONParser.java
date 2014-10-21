@@ -207,7 +207,7 @@ public class JSONParser {
                     aIcon = matches.get("1").findPath("team_logos").findPath("url").asText();
                     hScore = matches.get("0").findPath("team_points").get("total").asDouble();
                     aScore = matches.get("1").findPath("team_points").get("total").asDouble();
-                    matchups.add(new MatchupObject(hTeam, hOwner, hIcon, hScore, aTeam, aOwner, aIcon, aScore));
+                    matchups.add(new MatchupObject(hTeam, hOwner, hIcon, hScore, "1", aTeam, aOwner, aIcon, aScore, "2"));
                 }
 
             }

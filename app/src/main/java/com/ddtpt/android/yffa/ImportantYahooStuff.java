@@ -105,6 +105,14 @@ public class ImportantYahooStuff {
         return sImportantYahooStuff;
     }
 
+    public Token getAccToken() {
+        return mAccessToken;
+    }
+
+    public OAuthService getService() {
+        return mService;
+    }
+
     private ImportantYahooStuff(Context context) {
         mTeam = Team.get(context);
         mContext = context;
@@ -231,8 +239,8 @@ public class ImportantYahooStuff {
 
             try {
                 newToken = YahooApi.class.newInstance().getAccessTokenExtractor().extract(response.getBody());
-                delegate.keyRetrievalComplete(true);
                 mAccessToken = newToken;
+                delegate.keyRetrievalComplete(true);
             } catch (Exception e) {
                 Log.e("ERROR REFRESHING", e.toString());
                 delegate.keyRetrievalComplete(false);
@@ -315,7 +323,9 @@ public class ImportantYahooStuff {
         protected Void doInBackground(Void... params) {
             Log.i("GENERATE ROSTER", "HIT");
             String query = leagueResourceRequestBuilder(ROSTER);
-            OAuthRequest request = new OAuthRequest(Verb.GET, query);
+            //REMOVE THIS QUERY!!!!!!!!!!!!
+            String not_query = BASE_URL + "players;player_keys=331.p.9265/stats;type=week;week=current" + JSON_FORMAT;
+            OAuthRequest request = new OAuthRequest(Verb.GET, not_query);
             mService.signRequest(mAccessToken, request);
             Response response = request.send();
 

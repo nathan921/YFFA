@@ -8,7 +8,7 @@ import android.app.FragmentTransaction;
 /**
  * Created by e228596 on 10/17/2014.
  */
-public class ScoreBoardActivity extends SingleFragmentActivity implements ScoreBoardFragment.Callbacks {
+public class ScoreBoardActivity extends SingleFragmentActivity {
     @Override
     protected Fragment createFragment() {
         return new ScoreBoardFragment();
@@ -20,7 +20,7 @@ public class ScoreBoardActivity extends SingleFragmentActivity implements ScoreB
             FragmentTransaction ft = fm.beginTransaction();
 
             Fragment oldDetail = fm.findFragmentById(R.id.detailsHolder);
-            Fragment newDetail = MatchupFragment.newInstace(matchup);
+            Fragment newDetail = MatchupFragment.newInstance(matchup);
 
             if (oldDetail != null) {
                 ft.remove(oldDetail);
@@ -31,7 +31,7 @@ public class ScoreBoardActivity extends SingleFragmentActivity implements ScoreB
             FragmentManager fm = getFragmentManager();
             MatchupFragment mFrag = (MatchupFragment)fm.findFragmentById(R.id.fragmentHolder);
             //Update MatchupFragments UI
-            mFrag.updateUI();  //TODO: Update UI should call (MatchupAdapter)getListAdapter().notifyDataSetChanged();
+            //mFrag.updateUI();  //TODO: Update UI should call (MatchupAdapter)getListAdapter().notifyDataSetChanged();
         }
     }
 }
