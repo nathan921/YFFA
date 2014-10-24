@@ -30,7 +30,8 @@ import retrofit.http.GET;
  */
 public class ImportantYahooStuff {
 
-    private Team mTeam;
+    private ArrayList<Team> mTeams;
+    private League mLeague;
 
     public keyRetrievalCompleteListener delegate = null;
     public matchupRetrievalCompleteListener matchupDelegate = null;
@@ -113,8 +114,21 @@ public class ImportantYahooStuff {
         return mService;
     }
 
+    public String getLeagueKey() {
+        return mLeagueKey;
+    }
+
+    public JSONParser getParser() {
+        return mParser;
+    }
+
+    public League getLeague() {
+        return mLeague;
+    }
+
     private ImportantYahooStuff(Context context) {
-        mTeam = Team.get(context);
+
+        mLeague = League.get(context);
         mContext = context;
         mLeagueKey = "";
         mGameKey = "";
@@ -173,6 +187,18 @@ public class ImportantYahooStuff {
             new refreshAccessToken().execute();
         }
 
+    }
+
+    public String fetchData(String uri) {
+        OAuthRequest request = new OAuthRequest(Verb.GET, uri);
+        mService.signRequest(mAccessToken, request);
+        Response response = request.send();
+
+        if (response.getCode() == 200) {
+            return response.getBody();
+        } else {
+            return "";
+        }
     }
 
     public class getRequestToken extends AsyncTask<Void, Void, Void> {
@@ -331,8 +357,8 @@ public class ImportantYahooStuff {
 
             if (responseCodeHandler(response.getCode())) {
                 Log.i("GENERATE ROSTER", "COMPLETE");
-                mTeam.setPlayers(mParser.parsePlayerList(response.getBody()));
-                rosterDelegate.rosterRetrievalComplete(mTeam.getPlayers());
+                //TODO: Update this - mTeam.setPlayers(mParser.parsePlayerList(response.getBody()));
+                //TODO: Update this - rosterDelegate.rosterRetrievalComplete(mTeam.getPlayers());
             }
             return null;
         }
@@ -349,8 +375,8 @@ public class ImportantYahooStuff {
 
             if (responseCodeHandler(response.getCode())) {
                 Log.i("GENERATE STATS", "COMPLETE");
-                mTeam.setStats(mParser.parseStatMap(response.getBody()));
-                statsDelegate.statRetrievalComplete(mTeam.getStats());
+                //TODO: Update this - mTeam.setStats(mParser.parseStatMap(response.getBody()));
+                //TODO: Update this - statsDelegate.statRetrievalComplete(mTeam.getStats());
             }
             return null;
         }
@@ -379,7 +405,7 @@ public class ImportantYahooStuff {
         @Override
         protected Void doInBackground(Void... params) {
             Log.i("MATCHUPS", "HIT");
-            String query = leagueResourceRequestBuilder(MATCHUPS);
+            String query = "http://fantasysports.yahooapis.com/fantasy/v2/league/" + mLeagueKey + ";out=scoreboard,standings/teams;out=roster" + JSON_FORMAT;
             OAuthRequest request = new OAuthRequest(Verb.GET, query);
             mService.signRequest(mAccessToken, request);
             Response response = request.send();
@@ -408,7 +434,7 @@ public class ImportantYahooStuff {
     }
 
     public interface matchupRetrievalCompleteListener {
-        void matchupRetrievalComplete(ArrayList<MatchupObject> result);
+        void matchupRetrievalComplete(ArrayList<HashMap<String, Object>> result);
     }
 
     public interface rosterRetrievalCompleteListener {

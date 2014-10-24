@@ -6,14 +6,47 @@ import java.util.HashMap;
  * Created by e228596 on 10/12/2014.
  */
 public class Player {
-    private String mFullName,mPlayerKey, mEditorialPlayerKey, mEditorialTeamKey, mEditorialTeamFullName,
-    mEditorialTeamAbbr, mByeWeek, mUniformNumber, mImageUrl, mDisplayPosition, mSelectedPosition,
-    mInjuryStatus, mInjuryNote;
+    private String mFullName, mPlayerKey, mEditorialPlayerKey, mEditorialTeamKey,
+            mEditorialTeamFullName, mEditorialTeamAbbr, mByeWeek, mUniformNumber,
+            mImageUrl, mDisplayPosition, mSelectedPosition, mInjuryStatus, mInjuryNote, mPlayerId;
+    private HashMap<String, Object> mIndividualStats;
 
     Double mPlayerTotal;
 
-    private int mHasPlayerNotes;
+    private int mHasPlayerNotes, mIsEditable;
 
+    public Player(HashMap<String, Object> playerData) {
+        mFullName = playerData.get("player_full_name").toString();
+        mPlayerKey = playerData.get("player_key").toString();
+        mEditorialPlayerKey = playerData.get("player_editorial_key").toString();
+        mEditorialTeamKey = playerData.get("player_editorial_team_key").toString();
+        mEditorialTeamFullName = playerData.get("player_editorial_team_full_name").toString();
+        mEditorialTeamAbbr = playerData.get("player_editorial_team_abbr").toString();
+        mByeWeek = playerData.get("player_bye_week").toString();
+        mUniformNumber = playerData.get("player_uniform_number").toString();
+        mImageUrl = playerData.get("player_image_url").toString();
+        mDisplayPosition = playerData.get("player_display_position").toString();
+        mSelectedPosition = playerData.get("player_selected_position").toString();
+        mInjuryStatus = playerData.get("player_injury_status").toString();
+        mInjuryNote = playerData.get("player_injury_note").toString();
+        mPlayerId = playerData.get("player_id").toString();
+        mHasPlayerNotes = Integer.valueOf(playerData.get("player_notes").toString());
+        mIsEditable = Integer.valueOf(playerData.get("player_is_editable").toString());
+
+    }
+
+    public void setIndividualStats(HashMap<String, Object> stats) {
+        mIndividualStats = stats;
+        mPlayerTotal = Double.valueOf(stats.get("player_points").toString());
+    }
+
+    public String getPlayerId() {
+        return mPlayerId;
+    }
+
+    public int getIsEditable() {
+        return mIsEditable;
+    }
 
     public Double getPlayerTotal() {
         return mPlayerTotal;

@@ -16,13 +16,13 @@
             </intent-filter>
         </activity>
 
-        <activity android:name=".FootballDataActivity"></activity>
-
         <activity android:name=".RosterListActivity" ></activity>
 
         <activity android:name=".StatValueListActivity"></activity>
 
         <activity android:name=".MainPagerActivity"></activity>
+
+        <activity android:name=".MatchupActivity"></activity>
 
     </application>
     <uses-permission android:name="android.permission.INTERNET" />

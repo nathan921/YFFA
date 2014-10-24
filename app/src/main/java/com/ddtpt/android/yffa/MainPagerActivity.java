@@ -5,6 +5,7 @@ import android.app.Activity;
 import android.app.Fragment;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v13.app.FragmentStatePagerAdapter;
 import android.support.v4.view.ViewPager;
@@ -12,8 +13,16 @@ import android.support.v4.view.ViewPager;
 /**
  * Created by e228596 on 10/16/2014.
  */
-public class MainPagerActivity extends Activity {
+public class MainPagerActivity extends Activity implements ScoreBoardFragment.Callbacks{
     private ViewPager mViewPager;
+
+    @Override
+    public void onMatchupSelected(String team1, String team2) {
+        Intent intent = new Intent(this, MatchupActivity.class);
+        intent.putExtra("team1", team1);
+        intent.putExtra("team2", team2);
+        this.startActivity(intent);
+    }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {

@@ -12,6 +12,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -22,7 +23,7 @@ import java.util.Map;
  */
 public class JSONParser {
 
-    public ArrayList<Player> parsePlayerList(String json) {
+ /*   public ArrayList<Player> parsePlayerList(String json) {
         ArrayList<Player> players = new ArrayList<Player>();
 
         try {
@@ -89,6 +90,41 @@ public class JSONParser {
             }
 
         return players;
+    } */
+
+    public ArrayList<HashMap<String, Object>> parsePlayerScoring(String json) {
+        ArrayList<HashMap<String, Object>> fullStats = new ArrayList<HashMap<String, Object>>();
+        ObjectMapper mapper = new ObjectMapper();
+        try {
+            JsonNode root = mapper.readTree(json);
+            JsonNode base = root.findPath("league").findPath("players");
+            Iterator<JsonNode> iterator = base.elements();
+            while (iterator.hasNext()) {
+                HashMap<String, Object> tempStats = new HashMap<String, Object>();
+                base = iterator.next().get("player");
+                if (!(base == null)) {
+                    tempStats.put("player_id", base.get(0).findPath("player_id").asInt());
+                    tempStats.put("player_points", base.get(1).get("player_points").get("total").asDouble());
+                    base = base.findPath("player_stats").get("stats");
+                    Iterator<JsonNode> innerIter = base.elements();
+                    while (innerIter.hasNext()) {
+                        base = innerIter.next().get("stat");
+                        if (!(base == null)) {
+                            tempStats.put(base.get("stat_id").asText(), base.get("value").asInt());
+                        }
+                    }
+                fullStats.add(tempStats);
+                }
+            }
+
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            Log.e("parsePlayerScoring EXCEPTION", e.toString());
+        }
+
+
+        return fullStats;
     }
 
     public ArrayList<Stats> parseStatMap(String json) {
@@ -187,33 +223,121 @@ public class JSONParser {
         return teamKey;
     }
 
-    public ArrayList<MatchupObject> parseMatchupData(String json) {
-        ArrayList<MatchupObject> matchups = new ArrayList<MatchupObject>();
+    public ArrayList<HashMap<String, Object>> parseMatchupData(String json) {
         final ObjectMapper mapper = new ObjectMapper();
-        String hTeam, hOwner, hIcon, aTeam, aOwner, aIcon;
-        Double hScore, aScore;
+        ArrayList<HashMap<String, Object>> allTeamData = new ArrayList<HashMap<String, Object>>();
+        ArrayList<Integer> ids = new ArrayList<Integer>();
+
+        String temp;
+        int team_id;
+        int index;
+
         try {
             JsonNode root = mapper.readTree(json);
-            JsonNode matches = root.findPath("matchups");
+            JsonNode matches = root.findPath("league").get(1).get("scoreboard").findPath("matchups");
+            JsonNode standings = root.findPath("league").get(2).findPath("teams");
+            JsonNode roster = root.findPath("league").get(3).findPath("teams");
+
             Iterator<JsonNode> iterator = matches.elements();
+
             while (iterator.hasNext()) {
                 matches = iterator.next().findPath("teams");
                 if (!matches.isMissingNode()) {
-                    hTeam = matches.get("0").findPath("name").asText();
-                    aTeam = matches.get("1").findPath("name").asText();
-                    hOwner = matches.get("0").findPath("nickname").asText();
-                    aOwner = matches.get("1").findPath("nickname").asText();
-                    hIcon = matches.get("0").findPath("team_logos").findPath("url").asText();
-                    aIcon = matches.get("1").findPath("team_logos").findPath("url").asText();
-                    hScore = matches.get("0").findPath("team_points").get("total").asDouble();
-                    aScore = matches.get("1").findPath("team_points").get("total").asDouble();
-                    matchups.add(new MatchupObject(hTeam, hOwner, hIcon, hScore, "1", aTeam, aOwner, aIcon, aScore, "2"));
+                    HashMap<String, Object> dataPointsHome = new HashMap<String, Object>();
+                    HashMap<String, Object> dataPointsAway = new HashMap<String, Object>();
+                    JsonNode homeNode = matches.get("0");
+                    JsonNode awayNode = matches.get("1");
+
+                    dataPointsHome.put("team_name", homeNode.findPath("name").asText());
+                    dataPointsHome.put("team_key", homeNode.findPath("team_key").asText());
+                    dataPointsHome.put("team_id", homeNode.findPath("team_id").asText());
+                    dataPointsHome.put("team_nickname", homeNode.findPath("nickname").asText());
+                    dataPointsHome.put("team_logos", homeNode.findPath("team_logos").findPath("url").asText());
+                    dataPointsHome.put("team_waiver_priority", homeNode.findPath("waiver_priority").asText());
+                    dataPointsHome.put("team_number_of_moves", homeNode.findPath("number_of_moves").asText());
+                    dataPointsHome.put("team_points", homeNode.findPath("team_points").get("total").asText());
+                    dataPointsHome.put("team_projected_points", homeNode.findPath("team_projected_points").get("total").asText());
+                    ids.add(Integer.valueOf(homeNode.findPath("team_id").asText()));
+
+                    dataPointsAway.put("team_name", awayNode.findPath("name").asText());
+                    dataPointsAway.put("team_key", awayNode.findPath("team_key").asText());
+                    dataPointsAway.put("team_id", awayNode.findPath("team_id").asText());
+                    dataPointsAway.put("team_nickname", awayNode.findPath("nickname").asText());
+                    dataPointsAway.put("team_logos", awayNode.findPath("team_logos").findPath("url").asText());
+                    dataPointsAway.put("team_waiver_priority", awayNode.findPath("waiver_priority").asText());
+                    dataPointsAway.put("team_number_of_moves", awayNode.findPath("number_of_moves").asText());
+                    dataPointsAway.put("team_points", awayNode.findPath("team_points").get("total").asText());
+                    dataPointsAway.put("team_projected_points", awayNode.findPath("team_projected_points").get("total").asText());
+                    ids.add(Integer.valueOf(awayNode.findPath("team_id").asText()));
+
+                    allTeamData.add(dataPointsHome);
+                    allTeamData.add(dataPointsAway);
                 }
 
             }
+            iterator = standings.elements();
+            while (iterator.hasNext()) {
+                standings = iterator.next().findPath("team");
+                if (!standings.isMissingNode()) {
+                    temp = standings.findPath("team_id").asText();
+                    team_id = Integer.valueOf(temp);
+                    index = ids.indexOf(team_id);
+                    allTeamData.get(index).put("team_rank", standings.findPath("team_standings").get("rank").asText());
+                    allTeamData.get(index).put("team_wins", standings.findPath("team_standings").get("outcome_totals").get("wins").asText());
+                    allTeamData.get(index).put("team_losses", standings.findPath("team_standings").get("outcome_totals").get("losses").asText());
+                    allTeamData.get(index).put("team_ties", standings.findPath("team_standings").get("outcome_totals").get("ties").asText());
+                    allTeamData.get(index).put("team_streak_type", standings.findPath("team_standings").get("streak").get("type").asText());
+                    allTeamData.get(index).put("team_streak_value", standings.findPath("team_standings").get("streak").get("value").asText());
+                    allTeamData.get(index).put("team_points_for_year", standings.findPath("team_standings").get("points_for").asText());
+                    allTeamData.get(index).put("team_points_against_year", standings.findPath("team_standings").get("points_against").asText());
+                }
+            }
+
+            iterator = roster.elements();
+            while (iterator.hasNext()) {
+                JsonNode team = iterator.next();
+                temp = team.findPath("team_id").asText();
+                if (!temp.equals("")) {
+                    team = team.get("team").findPath("roster").findPath("players");
+                    team_id = Integer.valueOf(temp);
+                    index = ids.indexOf(team_id);
+
+                    Iterator<JsonNode> innerIter = team.elements();
+                    ArrayList<Player> players = new ArrayList<Player>();
+                    while (innerIter.hasNext()) {
+                        team = innerIter.next().get("player");
+                        if (team != null) {
+                            HashMap<String, Object> data = new HashMap<String, Object>();
+                            data.put("player_full_name", team.findPath("name").get("full").asText());
+                            data.put("player_key", team.findPath("player_key").asText());
+                            data.put("player_editorial_key", team.findPath("editorial_player_key").asText());
+                            data.put("player_editorial_team_key", team.findPath("editorial_team_key").asText());
+                            data.put("player_editorial_team_full_name", team.findPath("editorial_team_full_name").asText());
+                            data.put("player_editorial_team_abbr", team.findPath("editorial_team_abbr").asText());
+                            data.put("player_bye_week", team.findPath("bye_weeks").get("week").asText());
+                            data.put("player_uniform_number", team.findPath("uniform_number").asText());
+                            data.put("player_image_url", team.findPath("headshot").get("url").asText());
+                            data.put("player_display_position", team.findPath("display_position").asText());
+                            data.put("player_selected_position", team.findPath("selected_position").findPath("position").asText());
+                            data.put("player_injury_status", team.findPath("status").asText());
+                            data.put("player_injury_note", team.findPath("injury_note").asText());
+                            data.put("player_id", team.findPath("player_id").asText());
+                            data.put("player_notes", team.findPath("has_player_notes").asInt());
+                            data.put("player_is_editable", team.findPath("is_editable").asInt());
+
+                            Player p = new Player(data);
+
+                            players.add(p);
+                        }
+                    }
+                    allTeamData.get(index).put("players", players);
+                }
+            }
+
+
         } catch (Exception e)  {
             Log.e("JSONPARSE", e.toString());
         }
-        return matchups;
+        return allTeamData;
     }
 }

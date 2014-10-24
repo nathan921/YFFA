@@ -7,6 +7,7 @@ import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.TextView;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
@@ -16,26 +17,27 @@ import org.scribe.model.OAuthRequest;
 import org.scribe.model.Response;
 import org.scribe.model.Token;
 import org.scribe.model.Verb;
+import org.w3c.dom.Text;
+
+import java.util.ArrayList;
 
 
 /**
  * Created by e228596 on 10/20/2014.
  */
-public class MatchupFragment extends ListFragment {
+public class MatchupFragment extends ListFragment implements Team.onPlayerStatsRetrievedListener{
     ImportantYahooStuff mYahooStuff;
-    MatchupDetails mMatchupDetails;
+    Team mHomeTeam, mAwayTeam;
+    int mTeam1, mTeam2;
+    MatchupDetailsAdapter adapter;
 
-    private static final String TEAM_ID1 = "ID1";
-    private static final String TEAM_ID2 = "ID2";
+    private static final String TEAM_ID1 = "team1";
+    private static final String TEAM_ID2 = "team2";
 
-    public MatchupFragment() {
-
-    }
-
-    public static MatchupFragment newInstance(MatchupObject object) {
+    public static MatchupFragment newInstance(String team_1, String team_2) {
         Bundle args = new Bundle();
-        args.putString(TEAM_ID1, object.getHomeTeamId());
-        args.putString(TEAM_ID2, object.getAwayTeamId());
+        args.putString(TEAM_ID1, team_1);
+        args.putString(TEAM_ID2, team_2);
 
         MatchupFragment fragment = new MatchupFragment();
         fragment.setArguments(args);
@@ -43,6 +45,12 @@ public class MatchupFragment extends ListFragment {
         return fragment;
     }
 
+    public void onPlayerStatsRetrieved() {
+        //mHomeTeam = mYahooStuff.getLeague().getTeamById(mTeam1);
+        //mAwayTeam = mYahooStuff.getLeague().getTeamById(mTeam2);
+
+        adapter.notifyDataSetChanged();
+    }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -51,18 +59,33 @@ public class MatchupFragment extends ListFragment {
         String homeTeam = getArguments().getString(TEAM_ID1);
         String awayTeam = getArguments().getString(TEAM_ID2);
 
+        mTeam1 = Integer.valueOf(homeTeam);
+        mTeam2 = Integer.valueOf(awayTeam);
+
         mYahooStuff = ImportantYahooStuff.get(getActivity());
 
-        MatchupDetailsAdapter adapter = new MatchupDetailsAdapter();
+        mHomeTeam = mYahooStuff.getLeague().getTeamById(mTeam1);
+        mAwayTeam = mYahooStuff.getLeague().getTeamById(mTeam2);
+
+        mHomeTeam.playerStatsDelegate = this;
+        mAwayTeam.playerStatsDelegate = this;
+
+        adapter = new MatchupDetailsAdapter();
         setListAdapter(adapter);
 
-        mYahooStuff.new fetchMatchups().execute();
+        mYahooStuff.getLeague().getTeam(Integer.valueOf(homeTeam)-1).new updateTeamPointData().execute();
+        mYahooStuff.getLeague().getTeam(Integer.valueOf(awayTeam)-1).new updateTeamPointData().execute();
     }
 
-    private class MatchupDetailsAdapter extends ArrayAdapter<MatchupDetails> {
+    private class MatchupDetailsAdapter extends ArrayAdapter<Double> {
 
         public MatchupDetailsAdapter() {
             super(getActivity(), 0);
+        }
+
+        @Override
+        public int getCount() {
+            return mHomeTeam.getPlayers().size();
         }
 
         @Override
@@ -71,32 +94,13 @@ public class MatchupFragment extends ListFragment {
                 convertView = getActivity().getLayoutInflater().inflate(R.layout.matchup_detail_list_item, null);
             }
 
+            TextView homeScore = (TextView) convertView.findViewById(R.id.tempText);
+            TextView awayScore = (TextView) convertView.findViewById(R.id.temp2Text);
+
+            homeScore.setText(mHomeTeam.getPlayers().get(position).getPlayerTotal().toString());
+            awayScore.setText(mAwayTeam.getPlayers().get(position).getPlayerTotal().toString());
+
             return convertView;
-        }
-    }
-
-    private class getMatchupDetails extends AsyncTask<String, Void, String> {
-        @Override
-        protected String doInBackground(String... params) {
-            Token accessToken = mYahooStuff.getAccToken();
-            OAuthRequest request = new OAuthRequest(Verb.GET, "https://api.login.yahoo.com/oauth/v2/get_token");  //Update with data specific to the teams requested.
-            mYahooStuff.getService().signRequest(accessToken, request);
-            Response response = request.send();
-
-            if (response.getCode() == 200) {
-                return response.getBody();
-            } else {
-                return "";
-            }
-        }
-        @Override
-        protected void onPostExecute(String json) {
-            ObjectMapper mapper = new ObjectMapper();
-            try {
-                JsonNode root = mapper.readTree(json);
-            } catch (Exception e) {
-                Log.e("MATCHUPFRAGMENT", e.toString());
-            }
         }
     }
 
