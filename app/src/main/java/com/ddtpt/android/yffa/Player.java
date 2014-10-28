@@ -32,6 +32,7 @@ public class Player {
         mPlayerId = playerData.get("player_id").toString();
         mHasPlayerNotes = Integer.valueOf(playerData.get("player_notes").toString());
         mIsEditable = Integer.valueOf(playerData.get("player_is_editable").toString());
+        mPlayerTotal = 5.5;
 
     }
 

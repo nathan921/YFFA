@@ -9,11 +9,14 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v13.app.FragmentStatePagerAdapter;
 import android.support.v4.view.ViewPager;
+import android.support.v7.app.ActionBarActivity;
+import android.support.v7.widget.Toolbar;
+import android.view.Window;
 
 /**
  * Created by e228596 on 10/16/2014.
  */
-public class MainPagerActivity extends Activity implements ScoreBoardFragment.Callbacks{
+public class MainPagerActivity extends ActionBarActivity implements ScoreBoardFragment.Callbacks{
     private ViewPager mViewPager;
 
     @Override
@@ -27,68 +30,17 @@ public class MainPagerActivity extends Activity implements ScoreBoardFragment.Ca
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        mViewPager = new ViewPager(this);
-        mViewPager.setId(R.id.viewPager);
+
+        setContentView(R.layout.view_pager_layout_with_toolbar);
+
+        mViewPager = (ViewPager) findViewById(R.id.myViewPager);
         mViewPager.setOffscreenPageLimit(4);
 
-        final ActionBar actionBar = getActionBar();
-
-        actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
-
-        setContentView(mViewPager);
-
-        ActionBar.TabListener tabListener = new ActionBar.TabListener() {
-            @Override
-            public void onTabSelected(ActionBar.Tab tab, FragmentTransaction ft) {
-                mViewPager.setCurrentItem(tab.getPosition());
-            }
-            @Override
-            public void onTabUnselected(ActionBar.Tab tab, FragmentTransaction ft) {
-
-            }
-            @Override
-            public void onTabReselected(ActionBar.Tab tab, FragmentTransaction ft) {
-
-            }
-        };
-
-        for (int i = 0; i < 3; i++ ) {
-            String tabText;
-            switch (i) {
-                case 0:
-                    tabText = getString(R.string.roster);
-                    break;
-                case 1:
-                    tabText = getString(R.string.matchups);
-                    break;
-                case 2:
-                    tabText = getString(R.string.scoring);
-                    break;
-                default:
-                    tabText = "";
-            }
-            actionBar.addTab(
-                    actionBar.newTab()
-                    .setText(tabText)
-                    .setTabListener(tabListener)
-            );
-        }
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
 
         FragmentManager fm = getFragmentManager();
-        mViewPager.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
-            @Override
-            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
 
-            }
-            @Override
-            public void onPageSelected(int position) {
-                getActionBar().setSelectedNavigationItem(position);
-            }
-            @Override
-            public void onPageScrollStateChanged(int state) {
-
-            }
-        });
         mViewPager.setAdapter(new FragmentStatePagerAdapter(fm) {
             @Override
             public Fragment getItem(int i) {
