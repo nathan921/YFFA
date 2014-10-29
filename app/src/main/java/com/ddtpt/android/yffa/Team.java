@@ -71,7 +71,7 @@ public class Team {
         @Override
         protected String doInBackground(Void... params) {
             String playerKeys = generatePlayerKeysString();
-            String fetchUri = "http://fantasysports.yahooapis.com/fantasy/v2/league/" + mYahooStuff.getLeagueKey() + "/players;player_keys=" + playerKeys + "/stats;type=week;week=current?format=json";
+            String fetchUri = "http://fantasysports.yahooapis.com/fantasy/v2/league/" + mYahooStuff.getLeagueKey() + "/players;player_keys=" + playerKeys + "/stats;type=week;week=8?format=json";
 
             return mYahooStuff.fetchData(fetchUri);
         }

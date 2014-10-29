@@ -94,11 +94,28 @@ public class MatchupFragment extends ListFragment implements Team.onPlayerStatsR
                 convertView = getActivity().getLayoutInflater().inflate(R.layout.matchup_detail_list_item, null);
             }
 
-            TextView homeScore = (TextView) convertView.findViewById(R.id.tempText);
-            TextView awayScore = (TextView) convertView.findViewById(R.id.temp2Text);
+            TextView leftPlayerNameText = (TextView) convertView.findViewById(R.id.left_player_name);
+            TextView leftPlayerGameDataText = (TextView) convertView.findViewById(R.id.left_game_data);
+            TextView leftPlayerPointsText = (TextView) convertView.findViewById(R.id.left_current_points);
+            TextView leftPlayerProjectedPointsText = (TextView) convertView.findViewById(R.id.left_projected_points);
 
-            homeScore.setText(mHomeTeam.getPlayers().get(position).getPlayerTotal().toString());
-            awayScore.setText(mAwayTeam.getPlayers().get(position).getPlayerTotal().toString());
+            TextView rightPlayerNameText = (TextView) convertView.findViewById(R.id.right_player_name);
+            TextView rightPlayerGameDataText = (TextView) convertView.findViewById(R.id.right_game_data);
+            TextView rightPlayerPointsText = (TextView) convertView.findViewById(R.id.right_current_points);
+            TextView rightPlayerProjectedPointsText = (TextView) convertView.findViewById(R.id.right_projected_points);
+
+            Player left_player = mHomeTeam.getPlayers().get(position);
+            Player right_player = mAwayTeam.getPlayers().get(position);
+
+            leftPlayerNameText.setText(left_player.getFullName());
+            leftPlayerGameDataText.setText("11AM vs Cards");
+            leftPlayerPointsText.setText(left_player.getPlayerTotal());
+            leftPlayerProjectedPointsText.setText(left_player.getPlayerProjection());
+
+            rightPlayerNameText.setText(right_player.getFullName());
+            rightPlayerGameDataText.setText("2PM vs Giants");
+            rightPlayerPointsText.setText(right_player.getPlayerTotal());
+            rightPlayerProjectedPointsText.setText(right_player.getPlayerProjection());
 
             return convertView;
         }

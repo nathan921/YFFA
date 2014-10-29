@@ -1,20 +1,103 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              android:orientation="horizontal"
-              android:layout_width="match_parent"
-              android:layout_height="match_parent">
-    <TextView
-        android:layout_width="0dp"
-        android:layout_weight="1"
-        android:layout_height="wrap_content"
-        android:id="@+id/tempText"
-        android:text="THIS IS THE MATCHUP DETAILS FRAGMENT" />
+
+<RelativeLayout
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    xmlns:android="http://schemas.android.com/apk/res/android">
 
     <TextView
-        android:layout_width="0dp"
-        android:layout_weight="1"
+        android:id="@+id/left_player_name"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/temp2Text"
-        android:text="THIS IS THE MATCHUP DETAILS FRAGMENT" />
-</LinearLayout>
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentTop="true"
+        android:text="@string/test_name"
+
+        android:textColor="#EEEEEE"
+        android:textSize="15sp"
+        android:layout_margin="8dp"
+
+
+
+        />
+    <TextView
+        android:id="@+id/left_game_data"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_below="@id/left_player_name"
+        android:text="@string/test_game_data"
+
+        android:layout_marginLeft="8dp"
+        android:layout_marginBottom="8dp"
+        />
+
+    <TextView
+        android:id="@+id/vs_holder"
+        android:layout_width="30dp"
+        android:layout_height="match_parent"
+        android:text="@string/versus"
+        android:layout_centerInParent="true"
+        android:gravity="center"
+        android:background="#444444"
+        android:elevation="5dp"
+        />
+
+    <TextView
+        android:id="@+id/left_current_points"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/test_points"
+        android:layout_toLeftOf="@id/vs_holder"
+        android:layout_alignBaseline="@id/left_player_name"
+
+        android:textColor="#EEEE22"
+        android:layout_marginRight="8dp"
+        android:layout_marginTop="8dp"
+        />
+    <TextView
+        android:id="@+id/left_projected_points"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/test_points"
+        android:layout_alignBaseline="@id/left_game_data"
+        android:layout_alignRight="@id/left_current_points"
+        android:layout_toLeftOf="@id/vs_holder"
+        android:layout_below="@id/left_current_points"
+
+        android:textColor="#22DDDD" />
+    <TextView
+        android:id="@+id/right_player_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentTop="true"
+        android:text="@string/test_name"
+        />
+    <TextView
+        android:id="@+id/right_game_data"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/right_player_name"
+        android:layout_alignParentRight="true"
+        android:text="@string/test_game_data"
+        />
+    <TextView
+        android:id="@+id/right_current_points"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_toRightOf="@id/vs_holder"
+        android:layout_alignParentTop="true"
+        android:text="@string/test_points"
+        />
+    <TextView
+        android:id="@+id/right_projected_points"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/right_current_points"
+        android:layout_toRightOf="@id/vs_holder"
+        android:text="@string/test_points"
+        />
+
+</RelativeLayout>

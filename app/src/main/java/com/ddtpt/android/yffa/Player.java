@@ -1,5 +1,6 @@
 package com.ddtpt.android.yffa;
 
+import java.text.DecimalFormat;
 import java.util.HashMap;
 
 /**
@@ -10,8 +11,11 @@ public class Player {
             mEditorialTeamFullName, mEditorialTeamAbbr, mByeWeek, mUniformNumber,
             mImageUrl, mDisplayPosition, mSelectedPosition, mInjuryStatus, mInjuryNote, mPlayerId;
     private HashMap<String, Object> mIndividualStats;
+    DecimalFormat df = new DecimalFormat("#.00");
 
     Double mPlayerTotal;
+
+    Double mPlayerProjection;
 
     private int mHasPlayerNotes, mIsEditable;
 
@@ -33,12 +37,19 @@ public class Player {
         mHasPlayerNotes = Integer.valueOf(playerData.get("player_notes").toString());
         mIsEditable = Integer.valueOf(playerData.get("player_is_editable").toString());
         mPlayerTotal = 5.5;
+        mPlayerProjection = 1.1;
 
     }
 
     public void setIndividualStats(HashMap<String, Object> stats) {
         mIndividualStats = stats;
         mPlayerTotal = Double.valueOf(stats.get("player_points").toString());
+
+
+    }
+
+    public String getPlayerProjection() {
+        return df.format(mPlayerProjection);
     }
 
     public String getPlayerId() {
@@ -49,8 +60,8 @@ public class Player {
         return mIsEditable;
     }
 
-    public Double getPlayerTotal() {
-        return mPlayerTotal;
+    public String getPlayerTotal() {
+        return df.format(mPlayerTotal);
     }
 
     public void setPlayerTotal(Double playerTotal) {
